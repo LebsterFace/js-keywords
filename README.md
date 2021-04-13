@@ -3,7 +3,7 @@ Custom keywords in JavaScript!
 
 *(this is not a serious repository, PLEASE don't use it in production code)*
 
-## Create your own keywords and then use them
+## Create your keywords:
 Just define a handler function and a maximum number of arguments:
 ```js
 const keywords = {
@@ -14,14 +14,10 @@ const keywords = {
 }
 ```
 
-## Then, create the `Proxy` for your keywords:
+## Then, use them in a `with` block:
 ```js
-const proxy = proxyGen(keywords);
-```
-
-## Finally, use your keywords inside a `with` block:
-```js
-with (proxy) {
+const useKeywords = require("./proxy");
+with (useKeywords(keywords)) {
   print, V("Hello world");
 }
 ```

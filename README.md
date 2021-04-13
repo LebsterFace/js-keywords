@@ -7,10 +7,10 @@ Custom keywords in JavaScript!
 Just define a handler function and a maximum number of arguments:
 ```js
 const keywords = {
-    "print": {
-        func: msg => console.log("PRINT: " + msg),
-        maxArgs: 1
-    }
+  "print": {
+    func: msg => console.log("PRINT: " + msg),
+    maxArgs: 1
+  }
 }
 ```
 
@@ -23,12 +23,12 @@ const proxyGen = require("./proxy"),
 ## Finally, use your keywords inside a `with` block:
 ```js
 with (proxy) {
-	print, V("Hello world");
+  print, V("Hello world");
 }
 ```
 **Note:** To supply arguments, you need to use the `V` function. Multiple arguments can be seperated like so:
 ```js
 with (proxy) {
-	print, V("One"), V("Two"), V("Three");
+  print, V("One"), V("Two"), V("Three");
 }
 ```

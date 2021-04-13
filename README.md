@@ -26,9 +26,11 @@ with (proxy) {
   print, V("Hello world");
 }
 ```
-**Note:** To supply arguments, you need to use the `V` function. Multiple arguments can be seperated like so:
+This code outputs `PRINT: Hello world` to the console.
+
+**Note:** To supply arguments, you need to use the `V` function. Multiple arguments can be passed like so:
 ```js
 with (proxy) {
-  print, V("One"), V("Two"), V("Three");
+  someKeyword, V("One"), V("Two"), V("Three");
 }
 ```

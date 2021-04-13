@@ -16,8 +16,7 @@ const keywords = {
 
 ## Then, create the `Proxy` for your keywords:
 ```js
-const proxyGen = require("./proxy"),
-      proxy = proxyGen(keywords);
+const proxy = proxyGen(keywords);
 ```
 
 ## Finally, use your keywords inside a `with` block:

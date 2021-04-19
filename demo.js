@@ -3,11 +3,11 @@ const useKeywords = require("./proxy");
 const keywords = {
 	print: {
 		func: msg => console.log("PRINT: " + msg),
-		maxArgs: 1
+		args: 1
 	},
 	addAndPrint: {
 		func: (a, b) => console.log(`${a} + ${b} = ${a + b}`),
-		maxArgs: 2
+		args: 2
 	}
 };
 

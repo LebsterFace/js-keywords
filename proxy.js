@@ -1,57 +1,44 @@
-module.exports = (keywords = {}, obj = globalThis) =>
-	new Proxy(obj, {
-		args: [],
+module.exports = keywords => new Proxy({
 		keywords,
-		expectingArgument: false,
-		currentWord: null,
-		get(target, prop) {
-			if (prop === "V" && this.expectingArgument) {
-				return (value) => {
-					this.args.push(value);
-					if (this.args.length >= this.currentWord.maxArgs) {
-						return this.__handleKeyword();
-					} else {
-						return true;
-					}
-				};
-			}
-
-			const foundWord = Object.keys(this.keywords).find(kw => prop === kw);
-
-			if (foundWord) {
-				if (this.expectingArgument) throw new TypeError("Expecting an argument, not a keyword!");
-
-				this.currentWord = this.keywords[foundWord];
-				this.args = [];
-
-				if (this.currentWord.maxArgs > 0) {
-					this.expectingArgument = true;
-					return true;
-				} else {
-					return this.__handleKeyword();
-				}
-			} else {
-				return Reflect.get(...arguments);
-			}
-		},
-
-		__handleKeyword() {
-			const v = this.currentWord.func(...this.args);
-			this.currentWord = null;
-			this.expectingArgument = false;
-			this.args = [];
-			return v;
-		},
-
-		set(target, prop, value) {
-			if (prop === "V") {
-				throw "Cannot change a keyword handler!";
-			} else {
-				return (target[prop] = value);
-			}
-		},
-
-		has() {
-			return true;
+		state: {
+			args: [],
+			argsRemaining: -1,
+			keyword: null
 		}
-	});
+	}, {
+	get(obj, prop) {
+		if (prop === "V") {
+			return value => this.addToArgs(obj, value);
+		} else if (typeof prop !== "symbol") {
+			this.handleKeyword(obj, prop);
+		}
+
+		return null;
+	},
+
+	has(obj, prop) {
+		return prop === "V" || prop in obj.keywords;
+	},
+
+	addToArgs(obj, value) {
+		if (obj.state.argsRemaining <= 0) throw new SyntaxError("Was not expecting an argument at this time!");
+		obj.state.args.push(value);
+		obj.state.argsRemaining--;
+		if (obj.state.argsRemaining === 0) this.execKeyword(obj);
+	},
+	
+	handleKeyword(obj, newKeyword) {
+		if (obj.state.keyword !== null) throw new SyntaxError("Expecting an argument, not a keyword!");
+		obj.state.keyword = obj.keywords[newKeyword];
+		obj.state.args = [];
+		obj.state.argsRemaining = obj.keywords[newKeyword].args;
+		if (obj.state.argsRemaining === 0) this.execKeyword(obj);
+	},
+
+	execKeyword(obj) {
+		obj.state.keyword.func(...obj.state.args);
+		obj.state.args = [];
+		obj.state.argsRemaining = -1;
+		obj.state.keyword = null;
+	}
+});

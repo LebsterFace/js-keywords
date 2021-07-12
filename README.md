@@ -9,7 +9,7 @@ Just define a handler function and a maximum number of arguments:
 const keywords = {
   "print": {
     func: msg => console.log("PRINT: " + msg),
-    maxArgs: 1
+    args: 1
   }
 }
 ```
